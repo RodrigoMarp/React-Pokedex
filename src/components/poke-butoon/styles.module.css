@@ -1,0 +1,13 @@
+.pokebtn{
+    background-color: white;
+    border-radius: 50%;
+    height: 100%;
+    width: 30%;
+    transition: 1s;
+    cursor: pointer;
+
+}
+.pokebtn:hover{
+    background-color: rgb(103, 103, 112);
+    color: aqua;
+}
