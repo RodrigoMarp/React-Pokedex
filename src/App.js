@@ -1,48 +1,46 @@
-import logo from './logo.svg';
 import './App.css';
 import Card from './components/poke-card';
 import PokeButton from './components/poke-butoon/poke-button';
-import pokeimg1 from "./img/001.png";
-import pokeimg7 from "./img/007.png";
-import pokeimg4 from "./img/004.png";
-import pokeimg152 from "./img/152.png";
-import pokeimg155 from "./img/155.png";
-import pokeimg158 from "./img/158.png";
-import pokeimg252 from "./img/252.png";
-import pokeimg255 from "./img/255.png";
-import pokeimg258 from "./img/258.png";
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 function App() {
 
-  const [region, setRegion] = useState(0);
+  useEffect(() => {
+    async function fetchData() {
+      const getPoke = async (id) => {
+        const res = await fetch(`${apiUrl}/${id}`);
+        const resp = await res.json();
+        
+        let types = resp.types.map((t) => t.type.name);
+        types = types.join('/');
+        
+        let img = resp.sprites.other["official-artwork"].front_default;
 
-  const pokes = [ // pokes[0]
-    {
-      region: 'Kanto',
-      pokes: [
-        { id: 1, name: 'Bulbassauro', type: 'Grama/Poison', img: pokeimg1 },
-        { id: 4, name: 'Charmander', type: 'Fogo', img: pokeimg4 },
-        { id: 7, name: 'Squirtle', type: 'Água', img: pokeimg7 },
-      ],
-    },
-    {
-      region: 'Johto',
-      pokes: [
-        { id: 152, name: 'Chikorita', type: 'Grama', img: pokeimg152 },
-        { id: 155, name: 'Cyndaquil', type: 'Fogo', img: pokeimg155},
-        { id: 158, name: 'Totodile', type: 'Água', img: pokeimg158},
-      ],
-    },
-    {
-      region: 'Hoenn',
-      pokes: [
-        { id: 252, name: 'Treecko', type: 'Grama', img: pokeimg252 },
-        { id: 255, name: 'Torchic', type: 'Fogo', img: pokeimg255 },
-        { id: 258, name: 'Mudkip', type: 'Água', img: pokeimg258 },
-      ],
+        const poke = {
+          id: resp.id,
+          name: resp.name,
+          type: types,
+          img,
+        }
+        // console.log(poke);
+        return poke;
+      }
+
+      const pokes = [
+        await getPoke(1),
+        await getPoke(4),
+        await getPoke(7),
+      ];
+
+      setPokes(pokes);
     }
-  ];
+    fetchData();
+  }, []);
+
+  const [region, setRegion] = useState(0);
+  const [pokes, setPokes] = useState([]);
+
+  const apiUrl = "https://pokeapi.co/api/v2/pokemon";
 
   const pokebtnevent = (regionId) => { 
     setRegion(regionId);
@@ -77,7 +75,7 @@ function App() {
       </div>
       <div className='App-cards'>
         { 
-          pokes[region].pokes.map((poke, index) => {
+          pokes.map((poke, index) => {
             return (<Card
               key={`poke-card-${index}`}
               name={ poke.name }
