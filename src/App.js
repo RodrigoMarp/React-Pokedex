@@ -26,24 +26,46 @@ function App() {
         return poke;
       }
 
-      const pokes = [
-        await getPoke(1),
-        await getPoke(4),
-        await getPoke(7),
+      const region = [
+        {
+          regionName: "Kanto",
+          pokes: [
+            await getPoke(1),
+            await getPoke(4),
+            await getPoke(7),
+          ]
+        },
+        {
+          regionName: "Johto",
+          pokes: [
+            await getPoke(152),
+            await getPoke(155),
+            await getPoke(158),
+          ]
+        },
+        {
+          regionName: "Hoenn",
+          pokes: [
+            await getPoke(252),
+            await getPoke(255),
+            await getPoke(258),
+          ]
+        },
       ];
-
-      setPokes(pokes);
+      console.log("Been here");
+      setRegion(region);
     }
     fetchData();
   }, []);
 
-  const [region, setRegion] = useState(0);
-  const [pokes, setPokes] = useState([]);
+  const [regionId, setRegionId] = useState(0);
+  const [region, setRegion] = useState([]);
 
   const apiUrl = "https://pokeapi.co/api/v2/pokemon";
 
-  const pokebtnevent = (regionId) => { 
-    setRegion(regionId);
+  const pokebtnevent = (regionId) => {
+    console.log(regionId);
+    setRegionId(regionId);
   };
 
   return (
@@ -74,15 +96,16 @@ function App() {
             </form>
       </div>
       <div className='App-cards'>
-        { 
-          pokes.map((poke, index) => {
-            return (<Card
-              key={`poke-card-${index}`}
-              name={ poke.name }
-              type={ poke.type }
-              img={ poke.img}
-            />)
-          })
+        {
+          console.log(region[0])
+          // region[regionId].pokes.map((poke, index) => {
+          //   return (<Card
+          //     key={`poke-card-${index}`}
+          //     name={ poke.name }
+          //     type={ poke.type }
+          //     img={ poke.img}
+          //   />)
+          // })
         }
       </div>
     </div>
